@@ -3,13 +3,10 @@ import json
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
 from pathlib import Path
-import magic  # python-magic library for file type detection
-
-# Minimal exclusion patterns
+import magic  
 DEFAULT_EXCLUDE = {
-    'dirs': {'dist', '.git', 'venv', 'node_modules', '__pycache__'},  # Empty set to include all directories
-    'extensions': {'.pyc', '.json'}  # Only exclude compiled Python files
-}
+    'dirs': {'dist', '.git', 'venv', 'node_modules', '__pycache__'},  
+    'extensions': {'.pyc', '.json'}  }
 
 def detect_language(file_path, content):
     """Detect programming language based on file extension and content."""
@@ -34,17 +31,14 @@ def should_skip_path(path, exclude_patterns=None):
         
     path_obj = Path(path)
     
-    # Debug output
     print(f"Checking path: {path}")
     print(f"Extension: {path_obj.suffix}")
     
-    # Check if any parent directory should be excluded
     for parent in path_obj.parents:
         if parent.name in exclude_patterns['dirs']:
             print(f"Skipping due to excluded directory: {parent.name}")
             return True
             
-    # Check file extension
     if path_obj.suffix.lower() in exclude_patterns['extensions']:
         print(f"Skipping due to excluded extension: {path_obj.suffix}")
         return True
@@ -64,7 +58,6 @@ def analyze_code_files(directory_path, exclude_patterns=None):
     
     print(f"\nStarting analysis of directory: {directory_path}")
     
-    # Walk through directory
     for root_dir, dirs, files in os.walk(directory_path):
         print(f"\nExamining directory: {root_dir}")
         print(f"Found files: {files}")
@@ -77,18 +70,15 @@ def analyze_code_files(directory_path, exclude_patterns=None):
                 continue
                 
             try:
-                # Skip very large files
                 file_size = os.path.getsize(file_path)
                 if file_size > 10 * 1024 * 1024:  # 10MB
                     print(f"Skipping large file: {file_path} ({file_size} bytes)")
                     continue
                 
-                # Try to detect if it's a text file
                 mime = magic.Magic(mime=True)
                 file_type = mime.from_file(file_path)
                 print(f"File MIME type: {file_type}")
                 
-                # Modified to include common text-based MIME types
                 if not (file_type.startswith('text/') or 
                        file_type == 'application/javascript' or
                        file_type == 'application/json' or
@@ -96,11 +86,9 @@ def analyze_code_files(directory_path, exclude_patterns=None):
                     print(f"Skipping non-text file: {file_path} ({file_type})")
                     continue
                 
-                # Read file content
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
                 
-                # Create file data
                 file_data = {
                     'path': os.path.relpath(file_path, directory_path),
                     'name': file_name,

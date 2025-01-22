@@ -9,7 +9,7 @@ DEFAULT_EXCLUDE = {
     'extensions': {'.pyc', '.json'}  }
 
 def detect_language(file_path, content):
-    """Detect programming language based on file extension and content."""
+
     extension = Path(file_path).suffix.lower()
     
     language_map = {
@@ -25,7 +25,7 @@ def detect_language(file_path, content):
     return language_map.get(extension, 'Unknown')
 
 def should_skip_path(path, exclude_patterns=None):
-    """Check if a path should be skipped based on exclusion patterns."""
+    
     if exclude_patterns is None:
         exclude_patterns = DEFAULT_EXCLUDE
         
@@ -46,7 +46,7 @@ def should_skip_path(path, exclude_patterns=None):
     return False
 
 def analyze_code_files(directory_path, exclude_patterns=None):
-    """Analyze code files in a directory and return a dictionary with their contents and metadata."""
+    
     if exclude_patterns is None:
         exclude_patterns = DEFAULT_EXCLUDE
         
@@ -116,7 +116,7 @@ def analyze_code_files(directory_path, exclude_patterns=None):
     return analysis_data
 
 def save_output(analysis_data, output_file='code_analysis.json', format='json'):
-    """Save the analysis data to a file in the specified format."""
+    
     print(f"\nSaving output to: {output_file}")
     if format == 'json':
         with open(output_file, 'w', encoding='utf-8') as f:
@@ -126,7 +126,7 @@ def save_output(analysis_data, output_file='code_analysis.json', format='json'):
         raise ValueError(f"Unsupported output format: {format}")
 
 def main():
-    """Main function to run the code analyzer."""
+    
     import argparse
     
     parser = argparse.ArgumentParser(description='Analyze code files and create output file')
